@@ -83,7 +83,6 @@ set  GEMINI_API_KEY="__key__"
 set GOOGLE_CSE_ID="__id__"
 set GOOGLE_CSE_API_KEY="__key__" 
 
-In a separate terminal in the `` directory:
 
 ```bash
 # deploy your canister
