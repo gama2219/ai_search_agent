@@ -1,0 +1,18 @@
+{
+    "scripts": {
+        "pretest": "tsx test/pretest.ts",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@dfinity/candid": "^2.3.0",
+        "@dfinity/llm": "^1.1.1",
+        "azle": "^0.31.0",
+        "dotenv": "^16.4.5",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "prettier": "^3.2.5",
+        "ts-jest": "^29.3.2"
+    }
+}

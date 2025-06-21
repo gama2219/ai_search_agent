@@ -1,0 +1,63 @@
+service : {
+  aiSearch : (text) -> (
+      variant {
+        Ok : record {
+          "query" : text;
+          answer : text;
+          timestamp : text;
+          sources : vec record {
+            title : text;
+            displayLink : opt text;
+            link : text;
+            snippet : text;
+          };
+        };
+        Err : text;
+      },
+    );
+  geminiTransform : (
+      record {
+        status : nat16;
+        body : blob;
+        headers : vec record { value : text; name : text };
+      },
+    ) -> (
+      record {
+        status : nat16;
+        body : blob;
+        headers : vec record { value : text; name : text };
+      },
+    ) query;
+  getConversationHistory : () -> (
+      vec record { role : text; parts : vec record { "text" : text } },
+    ) query;
+  getSearchAnswerHistory : () -> (
+      vec record {
+        "query" : text;
+        answer : text;
+        timestamp : text;
+        sources : vec record {
+          title : text;
+          displayLink : opt text;
+          link : text;
+          snippet : text;
+        };
+      },
+    ) query;
+  prompt : (text) -> (text);
+  resetConversation : () -> (text);
+  resetSearchAnswerHistory : () -> (text);
+  searchTransform : (
+      record {
+        status : nat16;
+        body : blob;
+        headers : vec record { value : text; name : text };
+      },
+    ) -> (
+      record {
+        status : nat16;
+        body : blob;
+        headers : vec record { value : text; name : text };
+      },
+    ) query;
+}

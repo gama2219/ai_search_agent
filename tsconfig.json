@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ES2024",
+        "module": "ES2022",
+        "moduleResolution": "bundler",
+        "allowJs": true,
+        "noEmit": true,        
+        "esModuleInterop":true,
+        "outDir":"../dist",
+        "declaration":true,
+        "sourceMap":true,
+        "baseUrl":".",
+        "paths":{
+            "*":[
+                "node_modules/*"
+            ]
+        },
+        "typeRoots":[
+            "./node_modules/@types",
+            "../node_modules/azle"
+        ]
+    },
+    "include":[
+        "**/*"
+    ],
+    "exclude":[
+        "node_modules",
+        "dist"
+    ]
+}
