@@ -41,7 +41,7 @@ dfx --version
 ```
 * Get your API Key and CSE ID: Follow the official Google documentation: [https://developers.google.com/custom-search/v1/overview](https://developers.google.com/custom-search/v1/overview).
 
-*Get your Gemini API Key: https://aistudio.google.com/app/apikey
+* Get your Gemini API Key: https://aistudio.google.com/app/apikey
 
 ## Deployment
 
