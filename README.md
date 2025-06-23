@@ -1,19 +1,4 @@
-# Azle Hello World
-
-- [Installation](#installation)
-- [Deployment](#deployment)
-- [Testing](#testing)
-
-Azle helps you to build secure decentralized/replicated servers in TypeScript or JavaScript on [ICP](https://internetcomputer.org/). The current replication factor is [13-40 times](https://dashboard.internetcomputer.org/subnets).
-
-Azle stable mode is continuously subjected to [intense scrutiny and testing](https://github.com/demergent-labs/azle/actions), however it does not yet have multiple independent security reviews/audits.
-
-## Stable Mode
-
-Azle runs in stable mode by default.
-
-This mode is intended for production use after Azle's 1.0 release. Its focus is on API and runtime stability, security, performance, TypeScript and JavaScript language support, the ICP APIs, and Candid remote procedure calls (RPC). There is minimal support for the Node.js standard library, npm ecosystem, and HTTP server functionality.
-
+# AI search agent 
 ## Installation
 
 > Windows is only supported through a Linux virtual environment of some kind, such as [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
@@ -83,7 +68,6 @@ set  GEMINI_API_KEY="__key__"
 set GOOGLE_CSE_ID="__id__"
 set GOOGLE_CSE_API_KEY="__key__" 
 
-In a separate terminal in the `` directory:
 
 ```bash
 # deploy your canister
