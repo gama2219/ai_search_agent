@@ -1,14 +1,19 @@
-// backend_canister/src/index.ts
 import {
     update,
     query,
     Principal, 
     StableBTreeMap,
     IDL,
-    msgCaller
+    msgCaller,
+    call,
+    canisterSelf
 } from 'azle';
-import * as llm from '@dfinity/llm'
 
+import {
+    http_request_args,
+    http_request_result,
+    http_transform_args
+} from 'azle/canisters/management/idl';
 
 import { callGeminiAPI, performWebSearch } from './utils';
 import {
@@ -22,9 +27,7 @@ import {
     ISessionData,
     Result,
     Ok, 
-    Err, 
-    HttpResponse,
-    IHttpResponse
+    Err
 } from './types';
 
 
@@ -40,21 +43,19 @@ const MAX_CONVERSATION_HISTORY_LENGTH = 10;
   Retrieves the current caller's session data, or initializes it if it doesn't exist. 
  */
 function getCallerSession(): ISessionData {
-    const callerPrincipal: Principal =msgCaller();
+    const callerPrincipal: Principal = msgCaller();
     let sessionOpt = sessions.get(callerPrincipal);
 
-    
-    if (sessionOpt) { 
-        // Initialize new session data for this principal
+    if (sessionOpt !== undefined) { 
+        return sessionOpt;
+    } else {
+        // No existing session, create a new one
         const newSession: ISessionData = {
             conversationHistory: [],
             searchAnswerHistory: []
         };
-        sessions.insert(callerPrincipal, newSession);
+        sessions.insert(callerPrincipal, newSession); // Save the new session
         return newSession;
-    } else {
-        return {  conversationHistory: [],
-            searchAnswerHistory: []};
     }
 }
 
@@ -65,18 +66,8 @@ function saveCallerSession(sessionData: ISessionData): void {
 }
 
 
+
 export default class {
-    /*Initial greeting (query function - read-only)
-    @query([], IDL.Text)
-    greet(): string {
-        return `Hello from ICP AI Search Agent Backend! Your Principal:${msgCaller().toText()}`;
-    }*/
-	//test llm prompt
-    @update([IDL.Text], IDL.Text)
-    async prompt(prompt: string): Promise<string> {
-        return await llm.prompt(llm.Model.Llama3_1_8B, prompt);
-    }
-        // Resets the conversation history for the current caller's session.
 
     @update([], IDL.Text)
     resetConversation(): string {
@@ -222,23 +213,22 @@ export default class {
 
     // HTTP Outcall Transform Functions 
     //Transform function for Gemini API response.
-    @query([HttpResponse], HttpResponse)
-    geminiTransform(args: IHttpResponse): IHttpResponse {
+
+    @query([http_transform_args], http_request_result)
+    geminiTransform(args: http_transform_args): http_request_result {
         return {
-            status: args.status,
-            headers: [], // Clear headers to minimize size for consensus
-            body: args.body
+            ...args.response,
+            headers: []
         };
     }
 
     //Transform function for Google Custom Search API response.
 
-    @query([HttpResponse], HttpResponse)
-    searchTransform(args: IHttpResponse): IHttpResponse {
+        @query([http_transform_args], http_request_result)
+    searchTransform(args: http_transform_args): http_request_result {
         return {
-            status: args.status,
-            headers: [], // Clear headers to minimize size for consensus
-            body: args.body
+            ...args.response,
+            headers: []
         };
     }
 }

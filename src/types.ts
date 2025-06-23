@@ -1,4 +1,3 @@
-// backend_canister/src/types.ts
 import { Principal, IDL} from 'azle';
 
 /**
@@ -49,7 +48,7 @@ export interface ISearchResultItem {
     title: string;
     link: string;
     snippet: string;
-    displayLink: string
+    displayLink: string|undefined
 }
 
 /**
@@ -112,28 +111,4 @@ export function Ok<T>(value: T): Result<T, never> {
 // Helper for creating an 'Err' result
 export function Err<E>(error: E): Result<never, E> {
     return { Err: error };
-}
-
-// For HTTP Outcall Headers
-export const HttpHeader = IDL.Record({
-    name: IDL.Text,
-    value: IDL.Text,
-});
-
-export interface IHttpHeader {
-    name: string;
-    value: string;
-}
-
-// For HTTP Outcall Response Transformation
-export const HttpResponse = IDL.Record({
-    status: IDL.Nat16,
-    headers: IDL.Vec(HttpHeader),
-    body: IDL.Vec(IDL.Nat8), // Changed from Nat16 to Nat8 for bytes
-});
-
-export interface IHttpResponse {
-    status: number;
-    headers: IHttpHeader[];
-    body: Uint8Array; // Changed from number to Uint8Array
 }

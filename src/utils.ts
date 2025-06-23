@@ -1,5 +1,4 @@
-import { Principal,canisterSelf } from 'azle'; 
-import { azleFetch } from 'azle/src/experimental/lib/fetch'; 
+import { Principal,canisterSelf,call } from 'azle'; 
 import { 
     Result, 
     Ok, 
@@ -10,13 +9,19 @@ import {
     
 } from './types';
 
+import {
+    http_request_args,
+    http_request_result
+} from 'azle/canisters/management/idl';
+
+
 // Environment Variables (Loaded by DFX/Azle) 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CSE_API_KEY = process.env.GOOGLE_CSE_API_KEY;
 const GOOGLE_CSE_ID = process.env.GOOGLE_CSE_ID;
 
 // --- LLM (Gemini) Integration ---
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 //Calls the Gemini API with the given conversation history.
 export async function callGeminiAPI(
@@ -46,30 +51,42 @@ export async function callGeminiAPI(
     try {
         const url = `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`;
         
-        // Define the options object directly.
-        // The 'transform' property is recognized by azleFetch even if not explicitly in RequestInit from standard lib.
-        const options = { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: new TextEncoder().encode(JSON.stringify(requestBody)),
-            transform: {
-                function: [canisterSelf(), 'geminiTransform'] as [Principal, string], 
-                context: new Uint8Array()
-            }, 
-            cycles:50_000_000_000n,
-        };
+        const httpResponse = await call<[http_request_args],http_request_result>('aaaaa-aa', 'http_request', {
+            paramIdlTypes: [http_request_args],
+            returnIdlType: http_request_result,
+            args: [
+                {
+                    url:url,
+                    max_response_bytes: [2_000n],
+                    method: {
+                        post: null
+                    },
+                    headers: [
+                        {name:'Content-Type',value: 'application/json'},
+                        {name:'Accept',value:'application/json'},],
+                    body: [new TextEncoder().encode(JSON.stringify(requestBody))],
+                    transform: [
+                        {
+                            function: [canisterSelf(), 'geminiTransform'] as [
+                                Principal,
+                                string
+                            ],
+                            context: Uint8Array.from([])
+                        }
+                    ]
+                }
+            ],
+            cycles:25_000_000_000n,
+        });
 
-        const response = await azleFetch(url, options as RequestInit); // Cast to RequestInit here if needed
 
-        if (response.status !== 200) {
-            const errorDetails = await response.text(); 
-            return Err(`Gemini API HTTP Error: ${response.status}. Details: ${errorDetails}`);
+
+        if (Number(httpResponse.status) !== 200) {
+            return Err(`Gemini API HTTP Error in gemini fetch:`);
         }
+        let textreply=new TextDecoder().decode(Uint8Array.from(httpResponse.body)); 
 
-        const data = await response.json(); 
+        const data = JSON.parse(textreply); 
 
         if (data.promptFeedback && data.promptFeedback.blockReason) {
             return Err(`Gemini blocked response due to safety: ${data.promptFeedback.blockReason}`);
@@ -100,25 +117,44 @@ export async function performWebSearch(query: string): Promise<Result<ISearchRes
     const searchUrl = `${GOOGLE_CSE_URL}?key=${GOOGLE_CSE_API_KEY}&cx=${GOOGLE_CSE_ID}&q=${encodeURIComponent(query)}&num=5`;
     
     try {
-        const options = { 
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            },
-            transform: {
-                function: [canisterSelf(), 'searchTransform'] as [Principal, string], 
-                context: new Uint8Array()
-            },
-        };
 
-        const response = await azleFetch(searchUrl, options as RequestInit); // Cast to RequestInit here if needed
-
-        if (response.status !== 200) {
-            const errorDetails = await response.text(); 
-            return Err(`Web Search API HTTP Error: ${response.status}. Details: ${errorDetails}`);
+        const searchResponse = await call<[http_request_args],http_request_result>('aaaaa-aa', 'http_request', {
+            paramIdlTypes: [http_request_args],
+            returnIdlType: http_request_result,
+                        args: [
+                {
+                    url:searchUrl,
+                    max_response_bytes: [2_000n],
+                    method: {
+                        get: null
+                    },
+                    headers: [
+                        {name:'Accept',value:'application/json'},],
+                    body: [],
+                    transform: [
+                        {
+                            function: [canisterSelf(), 'searchTransform'] as [
+                                Principal,
+                                string
+                            ],
+                            context: Uint8Array.from([])
+                        }
+                    ]
+                }
+            ],
+            cycles:25_000_000_000n,
         }
+        );
 
-        const data = await response.json(); 
+
+
+        if (Number(searchResponse.status )!== 200) {
+            return Err(`Web Search API HTTP Error:`);
+        }
+        
+        let string_res=new TextDecoder().decode(Uint8Array.from(searchResponse.body));  
+
+        const data = JSON.parse(string_res);
 
         if (data.items && Array.isArray(data.items)) {
             const formattedResults: ISearchResultItem[] = data.items.map((item: any) => ({
