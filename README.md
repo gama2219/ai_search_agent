@@ -39,7 +39,7 @@ Check that the installation went smoothly by looking for clean output from the f
 dfx --version
 
 ```
-* Get your API Key and CSE ID:** Follow the official Google documentation: [https://developers.google.com/custom-search/v1/overview](https://developers.google.com/custom-search/v1/overview).
+* Get your API Key and CSE ID: Follow the official Google documentation: [https://developers.google.com/custom-search/v1/overview](https://developers.google.com/custom-search/v1/overview).
 
 ## Deployment
 
