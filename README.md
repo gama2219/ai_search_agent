@@ -37,14 +37,15 @@ Check that the installation went smoothly by looking for clean output from the f
 
 ```bash
 dfx --version
+
 ```
+* Get your API Key and CSE ID:** Follow the official Google documentation: [https://developers.google.com/custom-search/v1/overview](https://developers.google.com/custom-search/v1/overview).
 
 ## Deployment
 
 
 ```bash
-# create a new default project called hello_world
-npx azle new hello_world
+#open ai_search_engine dir
 cd ai_search_engine
 ```
 
