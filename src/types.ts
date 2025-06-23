@@ -48,7 +48,7 @@ export interface ISearchResultItem {
     title: string;
     link: string;
     snippet: string;
-    displayLink: string|undefined
+    displayLink: [string] | [];
 }
 
 /**

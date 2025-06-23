@@ -124,7 +124,7 @@ export async function performWebSearch(query: string): Promise<Result<ISearchRes
                         args: [
                 {
                     url:searchUrl,
-                    max_response_bytes: [2_000n],
+                    max_response_bytes: [2_000_000n],
                     method: {
                         get: null
                     },
@@ -161,7 +161,7 @@ export async function performWebSearch(query: string): Promise<Result<ISearchRes
                 title: item.title || 'No Title',
                 link: item.link || '#',
                 snippet: item.snippet || 'No snippet available.',
-                displayLink: item.displayLink ? item.displayLink :" "
+                displayLink:  item.displayLink ? [item.displayLink] : []
             }));
             return Ok(formattedResults);
         } else {
