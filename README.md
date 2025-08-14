@@ -67,9 +67,8 @@ export GEMINI_API_KEY="__key__"
 export GOOGLE_CSE_ID="__id__"
 export GOOGLE_CSE_API_KEY="__key__" 
 #windows
-set  GEMINI_API_KEY="__key__"
-set GOOGLE_CSE_ID="__id__"
-set GOOGLE_CSE_API_KEY="__key__" 
+set GEMINI_API_KEY="__key__" & set GOOGLE_CSE_ID="__id__" & set GOOGLE_CSE_API_KEY="__key__"
+ 
 
 
 ```bash
