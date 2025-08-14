@@ -63,9 +63,8 @@ dfx start --background
 ```bash
 #set enviroment variable on the shell
 #linux
-export GEMINI_API_KEY="__key__"
-export GOOGLE_CSE_ID="__id__"
-export GOOGLE_CSE_API_KEY="__key__" 
+export GEMINI_API_KEY="__key__"; export GOOGLE_CSE_ID="__id__"; export GOOGLE_CSE_API_KEY="__key__"
+
 #windows
 set GEMINI_API_KEY="__key__" & set GOOGLE_CSE_ID="__id__" & set GOOGLE_CSE_API_KEY="__key__"
  
