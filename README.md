@@ -1,9 +1,8 @@
 # AI search agent 
 ## Installation
 
-> Windows is only supported through a Linux virtual environment of some kind, such as [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 
-You will need [Node.js 22](#nodejs-22) and [dfx](#dfx) to develop ICP applications with Azle:
+You will need [Node.js 22](#nodejs-22) and [dfx](#dfx) to develop this ICP applications with Azle:
 
 ### Node.js
 
